@@ -10,15 +10,19 @@ class MoviesController < ApplicationController
 #    raise session.inspect
     @all_ratings = Movie.get_ratings
 
-    if !params[:ratings]
+    if !params[:ratings] && session[:ratings]
       redirect_to(movies_path({:ratings => session[:ratings], :sort => params[:sort]}))
-    elsif !params[:sort]
+    elsif !params[:sort] && session[:sort]
       redirect_to(movies_path({:ratings => params[:ratings], :sort => session[:sort]}))
     else   
       @checked_ratings = params[:ratings]
       session[:ratings] = @checked_ratings
       session[:sort] = params[:sort]
-      @movies = Movie.where(:rating => params[:ratings].keys)
+      if @checked_ratings
+        @movies = Movie.where(:rating => @checked_ratings.keys)
+      else
+        @movies = Movie.all
+      end
     end
       
     if params[:sort] == "title"
