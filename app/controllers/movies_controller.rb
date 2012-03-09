@@ -16,13 +16,12 @@ class MoviesController < ApplicationController
       @movies = Movie.where(:rating => params[:ratings].keys)
     else
       if session[:ratings]
-        @checked_ratings = session[:ratings]
-        @movies = Movie.where(:rating => session[:ratings].keys)
+        redirect_to(movies_path({:ratings => session[:ratings]}))
       elsif
         @movies = Movie.all
       end
     end
-    
+
     if params[:sort] == "title"
       @movies = @movies.sort_by {|m| m.title}
     elsif params[:sort] == "date"
