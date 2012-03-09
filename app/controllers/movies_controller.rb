@@ -7,14 +7,20 @@ class MoviesController < ApplicationController
   end
 
   def index
-    #    raise params.inspect
+#    raise session.inspect
     @all_ratings = Movie.get_ratings
 
     if params[:ratings]
       @checked_ratings = params[:ratings]
+      session[:ratings] = @checked_ratings
       @movies = Movie.where(:rating => params[:ratings].keys)
     else
-      @movies = Movie.all
+      if session[:ratings]
+        @checked_ratings = session[:ratings]
+        @movies = Movie.where(:rating => session[:ratings].keys)
+      elsif
+        @movies = Movie.all
+      end
     end
     
     if params[:sort] == "title"
