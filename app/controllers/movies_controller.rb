@@ -12,12 +12,14 @@ class MoviesController < ApplicationController
 
     if params[:ratings]
       @movies = Movie.where(:rating => params[:ratings].keys)
-    elsif params[:sort] == "title"
-      @movies = Movie.find(:all, :order => :title)
-    elsif params[:sort] == "date"
-      @movies = Movie.find(:all, :order => :release_date)
     else
       @movies = Movie.all
+    end
+    
+    if params[:sort] == "title"
+      @movies = @movies.sort_by {|m| m.title}
+    elsif params[:sort] == "date"
+      @movies = @movies.sort_by {|m| m.release_date}
     end
 
   end
